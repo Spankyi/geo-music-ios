@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="neon">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Geo Music">
+  <meta name="theme-color" content="#060711">
+  <title>Geo Music — iOS Pro Studio</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+  <link id="favIconLink" rel="icon" type="image/png" href="icons/favicon-64.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- خلفية الثيمات المتحركة المتفاعلة مع الأغاني -->
+  <canvas id="bgReactiveCanvas"></canvas>
+  <div class="ambient-bg"></div>
+
+  <div class="ios-shell">
+    <!-- الهيدر العلوي المتوافق مع Dynamic Island / Notch -->
+    <header class="ios-header glass">
+      <div class="header-top-row">
+        <div class="brand">
+          <div class="brand-logo-dynamic" id="brandLogoWrap" title="Geo Music Dynamic Studio">
+            <svg id="brandLogoSvg" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="logoThemeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:var(--accent);stop-opacity:1" />
+                  <stop offset="55%" style="stop-color:var(--accent-2);stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:var(--accent-pink);stop-opacity:1" />
+                </linearGradient>
+                <linearGradient id="logoBgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:var(--bg-dark);stop-opacity:0.95" />
+                  <stop offset="100%" style="stop-color:#0b0f24;stop-opacity:0.95" />
+                </linearGradient>
+              </defs>
+              <circle class="logo-orbit-ring" cx="24" cy="24" r="22" fill="none" stroke="url(#logoThemeGrad)" stroke-width="1.8" stroke-dasharray="10 6" opacity="0.85"/>
+              <circle class="logo-orbit-ring-reverse" cx="24" cy="24" r="19" fill="none" stroke="var(--accent-2)" stroke-width="1" stroke-dasharray="4 8" opacity="0.55"/>
+              <rect x="6" y="6" width="36" height="36" rx="11" fill="url(#logoBgGrad)" stroke="url(#logoThemeGrad)" stroke-width="2"/>
+              <rect id="logoEq1" x="13" y="18" width="2.4" height="12" rx="1.2" fill="var(--accent-2)" opacity="0.45"/>
+              <rect id="logoEq2" x="22.8" y="15" width="2.4" height="18" rx="1.2" fill="var(--accent-pink)" opacity="0.45"/>
+              <rect id="logoEq3" x="32.6" y="18" width="2.4" height="12" rx="1.2" fill="var(--accent)" opacity="0.45"/>
+              <text x="24" y="31.5" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-weight="900" font-size="23" fill="url(#logoThemeGrad)">G</text>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <h1>GEO MUSIC</h1>
+            <span id="brandSubText">iOS PRO STUDIO • CLEAN</span>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button class="ios-pill-btn" id="openOptionsSheetBtn" title="Options">
+            <svg viewBox="0 0 16 16"><path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/></svg>
+            <span id="lblOptionsBtn">الإعدادات</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- السيرش بار أول حاجة تحت اللوجو مباشرة + سجل البحث الذكي -->
+      <div class="search-wrap" id="searchWrapBox">
+        <span class="s-icon">
+          <svg viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>
+        </span>
+        <input type="search" id="searchInput" enterkeyhint="search" autocomplete="off" placeholder="ابحث عن أي أغنية أو مطرب لتحميلها أونلاين/أوفلاين...">
+        <button class="search-clear-x" id="searchClearInputBtn" hidden aria-label="Clear">✕</button>
+        <div class="search-history-dropdown" id="searchHistoryDropdown" hidden>
+          <div class="sh-header">
+            <span id="lblSearchHistoryTitle">سجل البحث الأخير</span>
+            <button class="sh-clear-btn" id="clearSearchHistoryBtn">مسح الكل</button>
+          </div>
+          <div class="sh-list" id="searchHistoryList"></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- المحتوى الرئيسي المتغير حسب التبويب السفلي -->
+    <main class="ios-pages">
+      <!-- صفحة الرئيسية / الأوفلاين / المفضلة / الملفات -->
+      <section class="ios-page active" id="pageLibrary">
+        <div class="hero-card glass">
+          <div class="hero-info">
+            <span class="hero-tag" id="heroTag">مكتبة نظيفة جاهزة لاختياراتك</span>
+            <h2 id="heroTitle">مكس النجوم (الكل)</h2>
+            <p id="heroDesc">ابحث أو شغّل أي أغنية لتحفظها على جهازك iPhone وتستمع إليها بدون إنترنت</p>
+          </div>
+          <div class="hero-actions">
+            <button class="btn-primary" id="playAllBtn">تشغيل الكل</button>
+            <button class="btn-ghost" id="karaokeToggleBtn">وضع الكاريوكي</button>
+          </div>
+        </div>
+
+        <!-- شريط نجوم المنصة + إضافة مغني (يظهر في الرئيسية) -->
+        <div class="artists-section" id="artistsSectionWrap">
+          <div class="section-head">
+            <span class="section-title" id="lblArtistsSection">نجوم المنصة</span>
+            <button class="add-artist-pill" id="addArtistToggleBtn">
+              <svg viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/></svg>
+              <span id="lblAddArtistBtn">إضافة مغني</span>
+            </button>
+          </div>
+
+          <div class="add-artist-wrap" id="addArtistWrap">
+            <div class="add-artist-box" id="addArtistBox" hidden>
+              <input type="text" id="newArtistInput" autocomplete="off" placeholder="اكتب أول حرف من اسم المغني...">
+              <button id="confirmAddArtistBtn">إضافة</button>
+            </div>
+            <div class="artist-suggest-dropdown" id="artistSuggestDropdown" hidden></div>
+          </div>
+
+          <div class="artist-pills" id="artistPills"></div>
+        </div>
+
+        <!-- صندوق استيراد الملفات من تطبيق Files بالآيفون (يظهر في تبويب ملفات إضافية) -->
+        <div class="iphone-import-card glass" id="localImportCard" hidden>
+          <button class="opt-add-music-btn" id="localTabAddBtn">
+            <svg viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/></svg>
+            <span id="lblImportFromIphone">+ استيراد ملفات صوتية من تطبيق Files بالآيفون</span>
+          </button>
+        </div>
+
+        <!-- قائمة الأغاني مع Spectrum Bars على الأغنية النشطة -->
+        <div class="tracks-container" id="tracksList"></div>
+      </section>
+
+      <!-- صفحة استوديو الصوت والإيكولايزر و 8D وقائمة الانتظار -->
+      <section class="ios-page" id="pageStudio">
+        <div class="studio-card glass">
+          <div class="studio-tabs">
+            <button class="tab-btn active" data-tab="eqTab" id="tabBtnEq">الإيكولايزر</button>
+            <button class="tab-btn" data-tab="dspTab" id="tabBtnDsp">مؤثرات 8D</button>
+            <button class="tab-btn" data-tab="queueTab" id="tabBtnQueue">الانتظار</button>
+          </div>
+
+          <!-- تبويب الإيكولايزر -->
+          <div class="tab-pane active" id="eqTab">
+            <div class="eq-presets">
+              <button class="preset-chip active" data-preset="flat" id="presetFlat">Flat Studio</button>
+              <button class="preset-chip" data-preset="mahraganat" id="presetMahraganat">مهرجانات</button>
+              <button class="preset-chip" data-preset="tarab" id="presetTarab">طرب وإحساس</button>
+              <button class="preset-chip" data-preset="bass" id="presetBass">Bass Boost</button>
+              <button class="preset-chip" data-preset="pop" id="presetPop">Pop Master</button>
+              <button class="preset-chip" data-preset="rock" id="presetRock">Rock Arena</button>
+              <button class="preset-chip" data-preset="electronic" id="presetElectronic">Electronic</button>
+              <button class="preset-chip" data-preset="cinema" id="presetCinema">Dolby Cinema</button>
+            </div>
+
+            <div class="viz-selector-row">
+              <button class="preset-chip active" data-viz="bars" id="vizBarsBtn">Spectrum Bars</button>
+              <button class="preset-chip" data-viz="wave" id="vizWaveBtn">Neon Wave</button>
+              <button class="preset-chip" data-viz="ring" id="vizRingBtn">Sonic Ring</button>
+            </div>
+
+            <div class="eq-sliders-mobile" id="eqSliders"></div>
+          </div>
+
+          <!-- تبويب المؤثرات الاحترافية 8D + Reverb + Bass + Speed -->
+          <div class="tab-pane" id="dspTab">
+            <div class="dsp-toggles-grid">
+              <button class="dsp-toggle-btn" id="toggle8DBtn">8D Audio Orbit: OFF</button>
+              <button class="dsp-toggle-btn" id="toggleCompressorBtn">Mastering Boost: OFF</button>
+            </div>
+
+            <div class="dsp-card">
+              <div class="dsp-row">
+                <span id="lblBassBoost">تعزيز الباص العميق (Sub-Bass)</span>
+                <span id="bassLabel">+0 dB</span>
+              </div>
+              <input type="range" id="bassRange" min="0" max="15" step="1" value="0">
+            </div>
+
+            <div class="dsp-card">
+              <div class="dsp-row">
+                <span id="lblReverb">صدى قاعة الحفلات (Concert Reverb)</span>
+                <span id="reverbLabel">0%</span>
+              </div>
+              <input type="range" id="reverbRange" min="0" max="100" step="5" value="0">
+            </div>
+
+            <div class="dsp-card">
+              <div class="dsp-row">
+                <span id="lblSpatial3D">وسع المسرح الصوتي (3D Widener)</span>
+                <span id="spatialLabel">0%</span>
+              </div>
+              <input type="range" id="spatialRange" min="0" max="100" step="5" value="0">
+            </div>
+
+            <div class="dsp-card">
+              <div class="dsp-row">
+                <span id="lblSpeed">سرعة التشغيل (Playback Speed)</span>
+                <span id="speedLabel">1.0x</span>
+              </div>
+              <input type="range" id="speedRange" min="0.5" max="1.5" step="0.05" value="1">
+            </div>
+          </div>
+
+          <!-- تبويب قائمة الانتظار -->
+          <div class="tab-pane" id="queueTab">
+            <div id="queueList" class="queue-list-stack"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- شريط المشغل المصغر العائم فوق شريط التبويب (Mini Player) -->
+    <div class="mini-player glass" id="miniPlayerBar">
+      <div class="mini-progress-track">
+        <div class="mini-progress-fill" id="miniProgressFill"></div>
+      </div>
+      <div class="mini-inner">
+        <img id="barCover" src="" alt="">
+        <div class="mini-meta">
+          <h4 id="barTitle">جاهز للتشغيل</h4>
+          <p id="barArtist">Geo Music iOS</p>
+        </div>
+        <div class="mini-actions">
+          <button class="like-btn" id="miniLikeBtn" aria-label="Like">
+            <svg viewBox="0 0 24 24"><path d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3zm-4.4 15.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z"/></svg>
+          </button>
+          <button class="mini-play-btn" id="miniPlayPauseBtn" aria-label="Play/Pause">
+            <svg id="miniPlayPauseSvg" viewBox="0 0 16 16"><path d="M3 1.713a.7.7 0 0 1 1.05-.607l10.89 6.288a.7.7 0 0 1 0 1.212L4.05 14.894A.7.7 0 0 1 3 14.288V1.713z"/></svg>
+          </button>
+          <button class="mini-next-btn" id="miniNextBtn" aria-label="Next">
+            <svg viewBox="0 0 16 16"><path d="M12.7 1a.7.7 0 0 0-.7.7v5.15L2.05 1.107A.7.7 0 0 0 1 1.712v12.575a.7.7 0 0 0 1.05.607L12 9.149V14.3a.7.7 0 0 0 .7.7h1.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-1.6z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- شريط التنقل السفلي الاحترافي بأسلوب iOS -->
+    <nav class="ios-tabbar glass" id="iosTabBar">
+      <button class="ios-tab-item active" data-nav="home" id="navHomeBtn">
+        <svg viewBox="0 0 16 16"><path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5z"/></svg>
+        <span id="lblNavHome">الرئيسية</span>
+      </button>
+
+      <button class="ios-tab-item" data-nav="offline" id="offlineCatBtn">
+        <div class="tab-icon-wrap">
+          <svg viewBox="0 0 16 16"><path d="M8.5 1.5A1.5 1.5 0 0 1 10 0h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h6c-.314.418-.5.937-.5 1.5v6h-2a.5.5 0 0 0-.354.854l2.5 2.5a.5.5 0 0 0 .708 0l2.5-2.5A.5.5 0 0 0 10.5 7.5h-2v-6z"/></svg>
+          <span class="tab-badge" id="offlineCountBadge">0</span>
+        </div>
+        <span id="lblOfflineNav">المحفوظة</span>
+      </button>
+
+      <button class="ios-tab-item" data-nav="favs" id="favCatBtn">
+        <div class="tab-icon-wrap">
+          <svg viewBox="0 0 16 16"><path d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/></svg>
+          <span class="tab-badge" id="favCountBadge">0</span>
+        </div>
+        <span id="lblFavsNav">المفضلة</span>
+      </button>
+
+      <button class="ios-tab-item" data-nav="local" id="localCatBtn">
+        <div class="tab-icon-wrap">
+          <svg viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M10 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"/></svg>
+          <span class="tab-badge" id="localCountBadge">0</span>
+        </div>
+        <span id="lblLocalNav">ملفاتي</span>
+      </button>
+
+      <button class="ios-tab-item" data-nav="studio" id="navStudioBtn">
+        <svg viewBox="0 0 16 16"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/><path d="M2 3.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm0 5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm0 5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm8.5-10a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm0 5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm0 5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5z"/></svg>
+        <span id="lblNavStudio">الاستوديو</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- شاشة التشغيل الكاملة (Full-Screen Now Playing Sheet بأسلوب Apple Music / Spotify iOS) -->
+  <div class="now-playing-sheet" id="nowPlayingSheet" aria-hidden="true">
+    <div class="sheet-backdrop"></div>
+    <div class="sheet-body">
+      <div class="sheet-top-bar">
+        <button class="sheet-close-btn" id="closeNowPlayingBtn" aria-label="Close">
+          <svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>
+        </button>
+        <div class="sheet-handle-pill"></div>
+        <div class="sheet-status-chip" id="sheetStatusChip">Streaming</div>
+      </div>
+
+      <!-- صورة المغني / الغلاف فقط بدون أي مؤثرات أو نصوص فوق الصورة -->
+      <div class="pure-artist-photo-box">
+        <img id="pureArtistImg" src="" alt="">
+      </div>
+
+      <div class="sheet-track-header">
+        <div class="sheet-track-titles">
+          <h2 id="sheetTitle">جاهز للتشغيل</h2>
+          <p id="sheetArtist">Geo Music iOS</p>
+        </div>
+        <div class="sheet-track-icons">
+          <button class="sheet-save-pill" id="sheetSaveBtn">
+            <svg viewBox="0 0 16 16"><path d="M8.75 1.75a.75.75 0 0 0-1.5 0v6.69L5.03 6.22a.75.75 0 0 0-1.06 1.06l3.5 3.5a.75.75 0 0 0 1.06 0l3.5-3.5a.75.75 0 0 0-1.06-1.06L8.75 8.44V1.75z"/><path d="M3.5 11.75a.75.75 0 0 0-1.5 0v1.5A1.75 1.75 0 0 0 3.75 15h8.5A1.75 1.75 0 0 0 14 13.25v-1.5a.75.75 0 0 0-1.5 0v1.5a.25.25 0 0 1-.25.25h-8.5a.25.25 0 0 1-.25-.25v-1.5z"/></svg>
+            <span id="sheetSaveText">حفظ بدون نت</span>
+          </button>
+          <button class="like-btn" id="nowLikeBtn" title="إضافة للمفضلة">
+            <svg viewBox="0 0 24 24"><path d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3zm-4.4 15.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="seek-row">
+        <span id="curTime">0:00</span>
+        <input type="range" id="seekBar" min="0" max="100" step="0.1" value="0">
+        <span id="totTime">0:00</span>
+      </div>
+
+      <div class="transport-btns" dir="ltr">
+        <button class="sp-ctrl-btn" id="shuffleBtn" title="Shuffle">
+          <svg viewBox="0 0 16 16"><path d="M13.151.922a.75.75 0 1 0-1.06 1.06L13.109 3H11.16a3.75 3.75 0 0 0-2.873 1.34l-6.173 7.356A2.25 2.25 0 0 1 .39 12.5H0V14h.391a3.75 3.75 0 0 0 2.873-1.34l6.173-7.356a2.25 2.25 0 0 1 1.724-.804h1.947l-1.017 1.018a.75.75 0 0 0 1.06 1.06L15.98 3.75 13.15.922zM.391 3.5H0V2h.391c1.109 0 2.16.49 2.873 1.34L4.89 5.277l-.979 1.167-1.796-2.14A2.25 2.25 0 0 0 .39 3.5z"/><path d="m7.5 10.723.98-1.167.957 1.14a2.25 2.25 0 0 0 1.724.804h1.947l-1.017-1.018a.75.75 0 1 1 1.06-1.06l2.829 2.828-2.829 2.828a.75.75 0 1 1-1.06-1.06L13.109 13H11.16a3.75 3.75 0 0 1-2.873-1.34l-.787-.938z"/></svg>
+        </button>
+
+        <button class="sp-ctrl-btn" id="prevBtn" title="Previous">
+          <svg viewBox="0 0 16 16"><path d="M3.3 1a.7.7 0 0 1 .7.7v5.15l9.95-5.744a.7.7 0 0 1 1.05.606v12.575a.7.7 0 0 1-1.05.607L4 9.149V14.3a.7.7 0 0 1-.7.7H1.7a.7.7 0 0 1-.7-.7V1.7a.7.7 0 0 1 .7-.7h1.6z"/></svg>
+        </button>
+
+        <button class="sp-play-btn" id="playPauseBtn" title="Play/Pause">
+          <svg id="playPauseSvg" viewBox="0 0 16 16">
+            <path d="M3 1.713a.7.7 0 0 1 1.05-.607l10.89 6.288a.7.7 0 0 1 0 1.212L4.05 14.894A.7.7 0 0 1 3 14.288V1.713z"/>
+          </svg>
+        </button>
+
+        <button class="sp-ctrl-btn" id="nextBtn" title="Next">
+          <svg viewBox="0 0 16 16"><path d="M12.7 1a.7.7 0 0 0-.7.7v5.15L2.05 1.107A.7.7 0 0 0 1 1.712v12.575a.7.7 0 0 0 1.05.607L12 9.149V14.3a.7.7 0 0 0 .7.7h1.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-1.6z"/></svg>
+        </button>
+
+        <button class="sp-ctrl-btn" id="repeatBtn" title="Repeat">
+          <svg viewBox="0 0 16 16"><path d="M0 4.75A3.75 3.75 0 0 1 3.75 1h8.5A3.75 3.75 0 0 1 16 4.75v5a3.75 3.75 0 0 1-3.75 3.75H9.81l1.018 1.018a.75.75 0 1 1-1.06 1.06L6.939 12.75l2.829-2.828a.75.75 0 1 1 1.06 1.06L9.811 12h2.439a2.25 2.25 0 0 0 2.25-2.25v-5a2.25 2.25 0 0 0-2.25-2.25h-8.5A2.25 2.25 0 0 0 1.5 4.75v5A2.25 2.25 0 0 0 3.75 12H5v1.5H3.75A3.75 3.75 0 0 1 0 9.75v-5z"/></svg>
+        </button>
+      </div>
+
+      <div class="sheet-extra-tools">
+        <button class="ab-loop-pill" id="abLoopBtn">A-B Loop</button>
+        <button class="ab-loop-pill" id="sleepBtn">Sleep Timer</button>
+        <button class="ab-loop-pill" id="sheetKaraokeBtn">Karaoke</button>
+        <button class="ab-loop-pill" id="sheet8DBtn">8D Orbit</button>
+        <button class="ab-loop-pill" id="sheetGoEqBtn">Studio EQ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- قائمة الإعدادات المنزلقة (Options Bottom Sheet) -->
+  <div class="options-modal-overlay" id="optionsModalOverlay" hidden>
+    <div class="options-sheet glass" id="optionsSheetPanel">
+      <div class="sheet-handle-pill" style="margin:0 auto 10px"></div>
+      <div class="options-sheet-head">
+        <strong id="lblOptionsSheetTitle">الإعدادات والمكتبة</strong>
+        <button class="sheet-close-x" id="closeOptionsSheetBtn">✕</button>
+      </div>
+
+      <div class="opt-item-row status-row" id="offlineStatusBanner">
+        <span class="status-dot"></span>
+        <span id="offlineStatusText">الحفظ التلقائي بدون نت: مفعّل</span>
+      </div>
+
+      <div class="opt-item-col">
+        <label class="opt-label" id="lblOptTheme">ثيم البرنامج (Theme)</label>
+        <select class="opt-select" id="themeSelect">
+          <option value="neon">Cyber Neon (Reactive)</option>
+          <option value="aurora">Northern Aurora (Animated)</option>
+          <option value="galaxy">Cosmic Nebula (Reactive)</option>
+          <option value="cyberpunk">Cyberpunk Pulse (Animated)</option>
+          <option value="lava">Magma Bass (Reactive)</option>
+          <option value="spotify">Spotify Studio</option>
+          <option value="crimson">Apple Crimson</option>
+          <option value="gold">Royal Gold</option>
+          <option value="ocean">Midnight Ocean</option>
+          <option value="light">Crystal Light</option>
+        </select>
+      </div>
+
+      <div class="opt-item-col">
+        <label class="opt-label" id="lblOptLang">اللغة (Language)</label>
+        <select class="opt-select" id="langSelect">
+          <option value="ar">العربية (AR)</option>
+          <option value="en">English (EN)</option>
+        </select>
+      </div>
+
+      <button class="opt-add-music-btn" id="toggleAddMusicBtn">
+        <svg viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/></svg>
+        <span id="lblAddMusicBtn">Add Music</span>
+      </button>
+
+      <div class="upload-box-compact" id="uploadBox" hidden>
+        <strong id="lblUploadTitle">+ اختر ملفات صوتية من الآيفون</strong>
+        <p id="lblUploadSub">MP3 / WAV / M4A</p>
+        <input type="file" id="fileInput" accept="audio/*" multiple hidden>
+      </div>
+
+      <button class="opt-danger-btn" id="clearAllOfflineBtn">
+        <span id="lblClearOfflineCache">مسح جميع الأغاني المحفوظة بدون نت</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- محرك الصوت المزدوج المخصص لنظام iOS (منع انقطاع الصوت في Safari/WKWebView + دعم Web Audio EQ) -->
+  <audio id="audioPlayer" playsinline webkit-playsinline crossorigin="anonymous" preload="auto"></audio>
+  <audio id="audioNative" playsinline webkit-playsinline preload="auto"></audio>
+
+  <script src="hls.min.js"></script>
+  <script src="audio-engine.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

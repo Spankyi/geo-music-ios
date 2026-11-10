@@ -1,0 +1,1387 @@
+/* ================= الثيمات الـ 10 المتحركة والمتفاعلة صوتياً — إصدار iOS الاحترافي ================= */
+:root,
+[data-theme="neon"] {
+  --bg-dark: #060711;
+  --bg-panel: rgba(14, 17, 34, 0.80);
+  --bg-card: rgba(255, 255, 255, 0.055);
+  --bg-card-hover: rgba(255, 255, 255, 0.11);
+  --accent: #7c5cff;
+  --accent-2: #00d4ff;
+  --accent-pink: #ff3e8a;
+  --text-main: #f4f6ff;
+  --text-muted: #9aa3c2;
+  --border-glass: rgba(255, 255, 255, 0.11);
+  --glow-rgb: 124, 92, 255;
+  --glow-2-rgb: 0, 212, 255;
+  --beat-energy: 0.05;
+  --mid-energy: 0.05;
+  --safe-top: env(safe-area-inset-top, 12px);
+  --safe-bottom: env(safe-area-inset-bottom, 12px);
+}
+
+[data-theme="aurora"] {
+  --bg-dark: #040d12;
+  --bg-panel: rgba(8, 24, 32, 0.82);
+  --bg-card: rgba(0, 245, 160, 0.06);
+  --bg-card-hover: rgba(0, 245, 160, 0.12);
+  --accent: #00f5a0;
+  --accent-2: #00d9f5;
+  --accent-pink: #8c52ff;
+  --text-main: #f0fff8;
+  --text-muted: #88b3a8;
+  --border-glass: rgba(0, 245, 160, 0.16);
+  --glow-rgb: 0, 245, 160;
+  --glow-2-rgb: 0, 217, 245;
+}
+
+[data-theme="galaxy"] {
+  --bg-dark: #090414;
+  --bg-panel: rgba(22, 10, 40, 0.82);
+  --bg-card: rgba(184, 69, 255, 0.065);
+  --bg-card-hover: rgba(184, 69, 255, 0.14);
+  --accent: #b845ff;
+  --accent-2: #ff47a3;
+  --accent-pink: #00d2ff;
+  --text-main: #fbf5ff;
+  --text-muted: #b399cc;
+  --border-glass: rgba(184, 69, 255, 0.18);
+  --glow-rgb: 184, 69, 255;
+  --glow-2-rgb: 255, 71, 163;
+}
+
+[data-theme="cyberpunk"] {
+  --bg-dark: #0a0410;
+  --bg-panel: rgba(24, 8, 32, 0.84);
+  --bg-card: rgba(255, 0, 127, 0.07);
+  --bg-card-hover: rgba(0, 240, 255, 0.14);
+  --accent: #ff007f;
+  --accent-2: #00f0ff;
+  --accent-pink: #fcee0a;
+  --text-main: #ffffff;
+  --text-muted: #c299b8;
+  --border-glass: rgba(0, 240, 255, 0.20);
+  --glow-rgb: 255, 0, 127;
+  --glow-2-rgb: 0, 240, 255;
+}
+
+[data-theme="lava"] {
+  --bg-dark: #110504;
+  --bg-panel: rgba(30, 11, 10, 0.84);
+  --bg-card: rgba(255, 69, 0, 0.065);
+  --bg-card-hover: rgba(255, 140, 0, 0.14);
+  --accent: #ff4500;
+  --accent-2: #ffae00;
+  --accent-pink: #ff0055;
+  --text-main: #fff8f5;
+  --text-muted: #bfa099;
+  --border-glass: rgba(255, 110, 0, 0.18);
+  --glow-rgb: 255, 69, 0;
+  --glow-2-rgb: 255, 174, 0;
+}
+
+[data-theme="spotify"] {
+  --bg-dark: #070907;
+  --bg-panel: rgba(14, 19, 15, 0.86);
+  --bg-card: rgba(255, 255, 255, 0.055);
+  --bg-card-hover: rgba(29, 185, 84, 0.14);
+  --accent: #1db954;
+  --accent-2: #1ed760;
+  --accent-pink: #00d4ff;
+  --text-main: #ffffff;
+  --text-muted: #a7b5ac;
+  --border-glass: rgba(29, 185, 84, 0.18);
+  --glow-rgb: 29, 185, 84;
+  --glow-2-rgb: 30, 215, 96;
+}
+
+[data-theme="crimson"] {
+  --bg-dark: #0e0508;
+  --bg-panel: rgba(26, 11, 16, 0.86);
+  --bg-card: rgba(255, 255, 255, 0.055);
+  --bg-card-hover: rgba(250, 36, 60, 0.14);
+  --accent: #fa243c;
+  --accent-2: #ff6b81;
+  --accent-pink: #ff9f43;
+  --text-main: #fff5f7;
+  --text-muted: #bfa3a8;
+  --border-glass: rgba(250, 36, 60, 0.18);
+  --glow-rgb: 250, 36, 60;
+  --glow-2-rgb: 255, 107, 129;
+}
+
+[data-theme="gold"] {
+  --bg-dark: #0c0a06;
+  --bg-panel: rgba(24, 19, 12, 0.86);
+  --bg-card: rgba(255, 215, 0, 0.06);
+  --bg-card-hover: rgba(245, 158, 11, 0.14);
+  --accent: #f59e0b;
+  --accent-2: #fbbf24;
+  --accent-pink: #ec4899;
+  --text-main: #fffbeb;
+  --text-muted: #b8af96;
+  --border-glass: rgba(245, 158, 11, 0.18);
+  --glow-rgb: 245, 158, 11;
+  --glow-2-rgb: 251, 191, 36;
+}
+
+[data-theme="ocean"] {
+  --bg-dark: #040b14;
+  --bg-panel: rgba(9, 21, 38, 0.86);
+  --bg-card: rgba(56, 189, 248, 0.06);
+  --bg-card-hover: rgba(14, 165, 233, 0.14);
+  --accent: #0ea5e9;
+  --accent-2: #38bdf8;
+  --accent-pink: #10b981;
+  --text-main: #f0f9ff;
+  --text-muted: #93b4cc;
+  --border-glass: rgba(56, 189, 248, 0.18);
+  --glow-rgb: 14, 165, 233;
+  --glow-2-rgb: 56, 189, 248;
+}
+
+[data-theme="light"] {
+  --bg-dark: #eef2f9;
+  --bg-panel: rgba(255, 255, 255, 0.88);
+  --bg-card: rgba(15, 23, 42, 0.05);
+  --bg-card-hover: rgba(99, 102, 241, 0.12);
+  --accent: #4f46e5;
+  --accent-2: #0284c7;
+  --accent-pink: #e11d48;
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --border-glass: rgba(15, 23, 42, 0.12);
+  --glow-rgb: 79, 70, 229;
+  --glow-2-rgb: 2, 132, 199;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+input, select, textarea {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+html, body {
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--bg-dark);
+  color: var(--text-main);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Tahoma, sans-serif;
+  transition: background 0.35s ease, color 0.25s ease;
+}
+
+#bgReactiveCanvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100dvh;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.ambient-bg {
+  position: fixed;
+  inset: -20%;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 20% 25%, rgba(var(--glow-rgb), calc(0.18 + var(--beat-energy) * 0.35)), transparent 45%),
+    radial-gradient(circle at 80% 75%, rgba(var(--glow-2-rgb), calc(0.14 + var(--mid-energy) * 0.30)), transparent 50%);
+  filter: blur(55px);
+  pointer-events: none;
+  animation: ambientFloat 14s ease-in-out infinite alternate;
+}
+
+@keyframes ambientFloat {
+  0% { transform: translate3d(-1.5%, -1%, 0) scale(1); }
+  100% { transform: translate3d(1.5%, 1.5%, 0) scale(1.06); }
+}
+
+.glass {
+  background: var(--bg-panel);
+  -webkit-backdrop-filter: blur(26px);
+  backdrop-filter: blur(26px);
+  border: 1px solid rgba(var(--glow-rgb), calc(0.15 + var(--beat-energy) * 0.4));
+  box-shadow:
+    0 10px 28px rgba(0, 0, 0, 0.35),
+    0 0 calc(6px + var(--beat-energy) * 22px) rgba(var(--glow-rgb), calc(0.06 + var(--beat-energy) * 0.2));
+}
+
+/* ================= الغلاف الرئيسي لهواتف iOS ================= */
+.ios-shell {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  padding: calc(var(--safe-top) + 6px) 10px calc(var(--safe-bottom) + 6px);
+  gap: 8px;
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+/* ================= الهيدر العلوي والبحث ================= */
+.ios-header {
+  border-radius: 18px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 30;
+}
+
+.header-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-logo-dynamic {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  transform: scale(calc(1 + var(--beat-energy) * 0.14));
+  transition: transform 0.08s ease-out;
+  filter: drop-shadow(0 0 calc(6px + var(--beat-energy) * 14px) var(--accent));
+}
+.brand-logo-dynamic svg {
+  width: 100%;
+  height: 100%;
+}
+.logo-orbit-ring {
+  transform-origin: 24px 24px;
+  animation: spinOrbit 9s linear infinite;
+}
+.logo-orbit-ring-reverse {
+  transform-origin: 24px 24px;
+  animation: spinOrbitReverse 14s linear infinite;
+}
+@keyframes spinOrbit {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes spinOrbitReverse {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+.brand-text h1 {
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  line-height: 1.1;
+}
+.brand-text span {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--accent-2);
+  letter-spacing: 0.8px;
+}
+
+.ios-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 99px;
+  background: var(--bg-card);
+  border: 1px solid rgba(var(--glow-rgb), 0.4);
+  color: var(--text-main);
+  font-size: 12px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+}
+.ios-pill-btn svg {
+  width: 14px;
+  height: 14px;
+  fill: var(--accent-2);
+}
+.ios-pill-btn:active {
+  transform: scale(0.95);
+  background: var(--accent);
+  color: #fff;
+}
+
+/* شريط البحث */
+.search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--border-glass);
+  border-radius: 12px;
+  padding: 0 10px;
+  height: 40px;
+}
+[data-theme="light"] .search-wrap {
+  background: rgba(15, 23, 42, 0.06);
+}
+.search-wrap:focus-within {
+  border-color: var(--accent-2);
+  box-shadow: 0 0 0 2px rgba(var(--glow-2-rgb), 0.22);
+}
+.s-icon {
+  display: flex;
+  align-items: center;
+  color: var(--text-muted);
+  margin-inline-end: 8px;
+}
+.s-icon svg {
+  width: 15px;
+  height: 15px;
+  fill: currentColor;
+}
+.search-wrap input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-main);
+  font-size: 13.5px;
+  font-family: inherit;
+}
+.search-wrap input::placeholder {
+  color: var(--text-muted);
+}
+.search-clear-x {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--text-main);
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.search-history-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: rgba(11, 14, 28, 0.97);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(var(--glow-rgb), 0.45);
+  border-radius: 14px;
+  padding: 8px;
+  z-index: 200;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.72);
+  max-height: 240px;
+  overflow-y: auto;
+}
+.search-history-dropdown[hidden] { display: none !important; }
+.sh-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 6px 8px;
+  font-size: 11px;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-glass);
+  margin-bottom: 4px;
+}
+.sh-clear-btn {
+  background: transparent;
+  border: none;
+  color: var(--accent-pink);
+  font-size: 11px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+}
+.sh-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 8px;
+  border-radius: 9px;
+  font-size: 13px;
+}
+.sh-item:active { background: var(--bg-card-hover); }
+.sh-term {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sh-term svg { width: 13px; height: 13px; fill: var(--accent-2); flex-shrink: 0; }
+.sh-del {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 62, 108, 0.16);
+  color: #ff6b8b;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+/* ================= منطقة الصفحات القابلة للتمرير باللمس ================= */
+.ios-pages {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+
+.ios-page {
+  display: none;
+  height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 12px;
+}
+.ios-page.active {
+  display: flex;
+}
+
+/* بطاقة الهيرو العصرية */
+.hero-card {
+  border-radius: 18px;
+  padding: 14px;
+  background: linear-gradient(135deg, rgba(var(--glow-rgb), 0.28), rgba(var(--glow-2-rgb), 0.12));
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.hero-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: 99px;
+  background: rgba(var(--glow-rgb), 0.25);
+  border: 1px solid rgba(var(--glow-2-rgb), 0.45);
+  color: var(--accent-2);
+  margin-bottom: 4px;
+}
+.hero-info h2 {
+  font-size: 19px;
+  font-weight: 900;
+  line-height: 1.25;
+}
+.hero-info p {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 3px;
+  line-height: 1.4;
+}
+.hero-actions {
+  display: flex;
+  gap: 8px;
+}
+.btn-primary, .btn-ghost {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 12.5px;
+  font-weight: 800;
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  transition: 0.16s;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff;
+  box-shadow: 0 5px 16px rgba(var(--glow-rgb), 0.4);
+}
+.btn-ghost {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  color: var(--text-main);
+}
+.btn-ghost.active-toggle {
+  background: linear-gradient(135deg, var(--accent-pink), var(--accent));
+  border-color: transparent;
+  color: #fff;
+}
+
+/* ================= قسم نجوم المنصة وإضافة مغني ================= */
+.artists-section {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  flex-shrink: 0;
+}
+.artists-section[hidden] { display: none !important; }
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px;
+}
+.section-title {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+.add-artist-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  border-radius: 99px;
+  border: 1px solid rgba(var(--glow-2-rgb), 0.5);
+  background: rgba(var(--glow-rgb), 0.22);
+  color: var(--accent-2);
+  font-size: 11px;
+  font-weight: 800;
+  font-family: inherit;
+}
+.add-artist-pill svg { width: 12px; height: 12px; fill: currentColor; }
+
+.add-artist-wrap { position: relative; z-index: 25; }
+.add-artist-box {
+  display: flex;
+  gap: 6px;
+  padding: 6px;
+  border-radius: 12px;
+  background: rgba(12, 16, 34, 0.85);
+  border: 1px solid rgba(var(--glow-2-rgb), 0.5);
+}
+.add-artist-box[hidden] { display: none !important; }
+.add-artist-box input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 13px;
+  font-family: inherit;
+  padding: 4px 6px;
+}
+.add-artist-box button {
+  padding: 6px 14px;
+  border-radius: 9px;
+  border: none;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  font-family: inherit;
+}
+.artist-suggest-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: rgba(11, 14, 28, 0.98);
+  border: 1px solid rgba(var(--glow-2-rgb), 0.55);
+  border-radius: 12px;
+  padding: 5px;
+  max-height: 210px;
+  overflow-y: auto;
+  z-index: 60;
+}
+.artist-suggest-dropdown[hidden] { display: none !important; }
+.artist-suggest-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+.artist-suggest-item:active { background: var(--bg-card-hover); }
+.artist-suggest-item img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+.artist-suggest-item .as-name { flex: 1; font-weight: 700; color: #fff; }
+.artist-suggest-item .as-sub { font-size: 11px; color: var(--accent-2); }
+
+.artist-pills {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 4px;
+}
+.artist-pills::-webkit-scrollbar { display: none; }
+.artist-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 99px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.artist-card.active {
+  background: linear-gradient(135deg, rgba(var(--glow-rgb), 0.42), rgba(var(--glow-2-rgb), 0.25));
+  border-color: var(--accent-2);
+}
+.artist-card img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.artist-card .a-name {
+  font-size: 12.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.del-artist-btn {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 62, 108, 0.22);
+  color: #ff6b8b;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+/* بطاقة الاستيراد من تطبيق الملفات */
+.iphone-import-card {
+  border-radius: 14px;
+  padding: 10px;
+  flex-shrink: 0;
+}
+.iphone-import-card[hidden] { display: none !important; }
+
+/* ================= قائمة الأغاني + Spectrum Bars على الأغنية الشغالة ================= */
+.tracks-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.track-row {
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+  min-height: 62px;
+  display: grid;
+  grid-template-columns: 46px 1fr auto auto;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 14px;
+  background: var(--bg-card);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.track-row > *:not(.row-spectrum-canvas) {
+  position: relative;
+  z-index: 2;
+}
+.track-row.playing {
+  background: linear-gradient(90deg, rgba(var(--glow-rgb), 0.24), rgba(var(--glow-2-rgb), 0.14));
+  border-color: rgba(var(--glow-2-rgb), 0.55);
+}
+.row-spectrum-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.72;
+}
+.track-cover {
+  width: 46px;
+  height: 46px;
+  border-radius: 10px;
+  object-fit: cover;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+}
+.track-meta {
+  min-width: 0;
+}
+.track-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.track-sub-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.track-artist {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.track-actions-wrap {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.track-badge {
+  font-size: 10px;
+  padding: 5px 8px;
+  border-radius: 99px;
+  background: rgba(var(--glow-rgb), 0.22);
+  color: var(--accent-2);
+  border: 1px solid rgba(var(--glow-rgb), 0.35);
+  font-weight: 700;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+.track-badge.saved {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.45);
+}
+.track-badge svg { width: 11px; height: 11px; fill: currentColor; }
+.unsave-btn {
+  font-size: 10px;
+  padding: 5px 8px;
+  border-radius: 99px;
+  background: rgba(255, 62, 108, 0.18);
+  border: 1px solid rgba(255, 62, 108, 0.45);
+  color: #ff6b8b;
+  font-weight: 800;
+  font-family: inherit;
+}
+.like-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.like-btn svg { width: 18px; height: 18px; fill: currentColor; }
+.like-btn.liked { color: #ff3e8a; }
+
+/* ================= صفحة الاستوديو والإيكولايزر المخصصة للمس بالآيفون ================= */
+.studio-card {
+  border-radius: 18px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.studio-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 4px;
+  border-radius: 12px;
+}
+.tab-btn {
+  padding: 8px 6px;
+  border-radius: 9px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 800;
+  font-family: inherit;
+}
+.tab-btn.active {
+  background: linear-gradient(135deg, var(--accent), rgba(var(--glow-2-rgb), 0.85));
+  color: #fff;
+}
+.tab-pane { display: none; flex-direction: column; gap: 10px; }
+.tab-pane.active { display: flex; }
+
+.eq-presets {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+.viz-selector-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+.preset-chip {
+  padding: 8px 4px;
+  border-radius: 10px;
+  font-size: 10.5px;
+  font-weight: 700;
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  color: var(--text-muted);
+  font-family: inherit;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.preset-chip.active {
+  background: linear-gradient(135deg, rgba(var(--glow-rgb), 0.42), rgba(var(--glow-2-rgb), 0.26));
+  border-color: var(--accent-2);
+  color: #fff;
+}
+
+/* أشرطة الإيكولايزر اللمسية بالآيفون (بدون مشاكل Slider Vertical) */
+.eq-sliders-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  border-radius: 14px;
+  border: 1px solid var(--border-glass);
+}
+.eq-mobile-row {
+  display: grid;
+  grid-template-columns: 44px 1fr 42px;
+  align-items: center;
+  gap: 8px;
+  direction: ltr;
+}
+.eq-freq-pill {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: var(--accent-2);
+  text-align: center;
+  background: rgba(var(--glow-2-rgb), 0.12);
+  padding: 3px 0;
+  border-radius: 6px;
+}
+.eq-mobile-row input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent-2);
+  height: 22px;
+}
+.eq-db-val {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.dsp-toggles-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.dsp-toggle-btn {
+  padding: 11px 8px;
+  border-radius: 12px;
+  border: 1px solid var(--border-glass);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  font-size: 11.5px;
+  font-weight: 800;
+  font-family: inherit;
+}
+.dsp-toggle-btn.active {
+  background: linear-gradient(135deg, var(--accent), var(--accent-pink));
+  border-color: transparent;
+  color: #fff;
+}
+.dsp-card {
+  background: var(--bg-card);
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border-glass);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.dsp-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 700;
+}
+.dsp-card input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent-2);
+  height: 24px;
+}
+.queue-list-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ================= المشغل المصغر العائم (Mini Player) ================= */
+.mini-player {
+  border-radius: 16px;
+  overflow: hidden;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.mini-progress-track {
+  height: 2.5px;
+  background: rgba(255, 255, 255, 0.1);
+  direction: ltr;
+}
+.mini-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  transition: width 0.2s linear;
+}
+.mini-inner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+}
+.mini-inner img {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.mini-meta {
+  flex: 1;
+  min-width: 0;
+}
+.mini-meta h4 {
+  font-size: 13px;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mini-meta p {
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mini-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  direction: ltr;
+}
+.mini-play-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: #fff;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mini-play-btn svg { width: 16px; height: 16px; fill: currentColor; }
+.mini-next-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mini-next-btn svg { width: 16px; height: 16px; fill: currentColor; }
+
+/* ================= شريط التنقل السفلي (iOS Tab Bar) ================= */
+.ios-tabbar {
+  border-radius: 20px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  padding: 6px 4px;
+  flex-shrink: 0;
+}
+.ios-tab-item {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 5px 2px;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+}
+.ios-tab-item svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+.ios-tab-item.active {
+  color: var(--accent-2);
+}
+.tab-icon-wrap {
+  position: relative;
+  display: inline-flex;
+}
+.tab-badge {
+  position: absolute;
+  top: -4px;
+  right: -9px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 99px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ================= شاشة التشغيل الكاملة المنزلقة للآيفون (Now Playing Sheet) ================= */
+.now-playing-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  transform: translateY(105%);
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+  display: flex;
+  flex-direction: column;
+}
+.now-playing-sheet.open {
+  transform: translateY(0);
+}
+.sheet-backdrop {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10, 12, 26, 0.96), var(--bg-dark));
+  -webkit-backdrop-filter: blur(36px);
+  backdrop-filter: blur(36px);
+}
+.sheet-body {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  max-width: 560px;
+  width: 100%;
+  margin: 0 auto;
+  padding: calc(var(--safe-top) + 12px) 22px calc(var(--safe-bottom) + 18px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+}
+.sheet-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.sheet-close-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--border-glass);
+  background: var(--bg-card);
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sheet-close-btn svg { width: 16px; height: 16px; fill: currentColor; }
+.sheet-handle-pill {
+  width: 42px;
+  height: 4px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.25);
+}
+.sheet-status-chip {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 99px;
+  background: rgba(var(--glow-rgb), 0.24);
+  color: var(--accent-2);
+}
+
+/* صورة المغني / الغلاف صافية تماماً بدون أي مؤثرات أو كتابة فوقها */
+.pure-artist-photo-box {
+  width: 100%;
+  max-height: 340px;
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #080a14;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.55);
+}
+.pure-artist-photo-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.sheet-track-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.sheet-track-titles { min-width: 0; flex: 1; }
+.sheet-track-titles h2 {
+  font-size: 19px;
+  font-weight: 900;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sheet-track-titles p {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.sheet-track-icons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sheet-save-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 10px;
+  border-radius: 99px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  color: var(--accent-2);
+  font-size: 11px;
+  font-weight: 700;
+  font-family: inherit;
+}
+.sheet-save-pill.saved {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: rgba(16, 185, 129, 0.5);
+  color: #34d399;
+}
+.sheet-save-pill svg { width: 12px; height: 12px; fill: currentColor; }
+
+.seek-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11.5px;
+  color: var(--text-muted);
+  direction: ltr;
+  font-variant-numeric: tabular-nums;
+}
+.seek-row input[type="range"] {
+  flex: 1;
+  accent-color: var(--accent-2);
+  height: 24px;
+}
+
+.transport-btns {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+}
+.sp-ctrl-btn {
+  position: relative;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sp-ctrl-btn svg { width: 21px; height: 21px; fill: currentColor; }
+.sp-ctrl-btn.active { color: var(--accent-2); }
+.sp-ctrl-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent-2);
+}
+.sp-play-btn {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: none;
+  background: #ffffff;
+  color: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(var(--glow-rgb), 0.5);
+}
+.sp-play-btn svg { width: 26px; height: 26px; fill: currentColor; }
+
+.sheet-extra-tools {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 7px;
+}
+.ab-loop-pill {
+  padding: 7px 11px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 800;
+  border: 1px solid var(--border-glass);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  font-family: inherit;
+}
+.ab-loop-pill.active {
+  background: var(--accent-pink);
+  border-color: var(--accent-pink);
+  color: #fff;
+}
+
+/* ================= قائمة الإعدادات Bottom Sheet ================= */
+.options-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 600;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 12px;
+}
+.options-modal-overlay[hidden] { display: none !important; }
+.options-sheet {
+  width: 100%;
+  max-width: 520px;
+  border-radius: 22px;
+  padding: 14px 16px calc(var(--safe-bottom) + 14px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.options-sheet-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.sheet-close-x {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: var(--bg-card);
+  color: var(--text-main);
+  font-weight: 900;
+}
+.opt-item-row.status-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(var(--glow-rgb), 0.16);
+  color: var(--accent-2);
+  font-size: 11.5px;
+  font-weight: 700;
+}
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-2);
+  box-shadow: 0 0 8px var(--accent-2);
+}
+.opt-item-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.opt-label {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text-muted);
+}
+.opt-select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  color: var(--text-main);
+  font-size: 13px;
+  font-weight: 700;
+  font-family: inherit;
+}
+.opt-select option { background: #101426; color: #fff; }
+.opt-add-music-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 11px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(var(--glow-rgb), 0.35), rgba(var(--glow-2-rgb), 0.2));
+  border: 1px solid rgba(var(--glow-rgb), 0.45);
+  color: var(--accent-2);
+  font-size: 13px;
+  font-weight: 800;
+  font-family: inherit;
+}
+.opt-add-music-btn svg { width: 15px; height: 15px; fill: currentColor; }
+.upload-box-compact {
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px dashed var(--accent-2);
+  background: rgba(var(--glow-rgb), 0.1);
+  text-align: center;
+}
+.upload-box-compact[hidden] { display: none !important; }
+.upload-box-compact strong { font-size: 13px; color: var(--accent-2); display: block; }
+.upload-box-compact p { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+.opt-danger-btn {
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 62, 108, 0.4);
+  background: rgba(255, 62, 108, 0.14);
+  color: #ff6b8b;
+  font-size: 12px;
+  font-weight: 800;
+  font-family: inherit;
+}

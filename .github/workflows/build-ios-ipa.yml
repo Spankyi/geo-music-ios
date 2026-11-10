@@ -1,0 +1,58 @@
+name: Build Geo Music iOS (.ipa)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build-ios:
+    name: Build Unsigned IPA on macOS
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies & sync Capacitor iOS
+        run: |
+          npm ci || npm install
+          npx cap sync ios
+
+      - name: Resolve Swift Package Dependencies
+        run: |
+          xcodebuild -resolvePackageDependencies -project ios/App/App.xcodeproj -scheme App
+
+      - name: Build iOS App (Unsigned for Sideloadly / AltStore / SideStore)
+        run: |
+          xcodebuild \
+            -project ios/App/App.xcodeproj \
+            -scheme App \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            build
+
+      - name: Package GeoMusicPlayer.ipa
+        run: |
+          mkdir -p Payload
+          APP_PATH=$(find build/Build/Products/Release-iphoneos -maxdepth 1 -name "*.app" | head -n 1)
+          echo "Found app bundle: $APP_PATH"
+          cp -r "$APP_PATH" Payload/GeoMusicPlayer.app
+          zip -r GeoMusicPlayer-iOS.ipa Payload
+
+      - name: Upload GeoMusicPlayer-iOS.ipa Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: GeoMusicPlayer-iOS-IPA
+          path: GeoMusicPlayer-iOS.ipa
+          retention-days: 30

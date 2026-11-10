@@ -1,0 +1,17 @@
+{
+  "appId": "com.geomusic.player",
+  "appName": "Geo Music",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "plugins": {
+    "CapacitorHttp": {
+      "enabled": true
+    }
+  },
+  "ios": {
+    "contentInset": "never",
+    "allowsLinkPreview": false,
+    "backgroundColor": "#060711",
+    "scrollEnabled": false
+  }
+}
