@@ -32,6 +32,7 @@
       this.audio = audioEl;
       this.nativeAudio = nativeAudioEl;
       this.activeSourceType = 'dsp'; // 'dsp' | 'native'
+      this.externalPlaying = false;
       this.bgCanvas = bgCanvasEl;
       this.ctx = null;
       this.analyser = null;
@@ -77,6 +78,10 @@
 
     setActiveSourceType(type) {
       this.activeSourceType = type === 'native' ? 'native' : 'dsp';
+    }
+
+    setExternalPlaying(playing) {
+      this.externalPlaying = !!playing;
     }
 
     _createImpulseResponse(durationSec, decay) {
@@ -307,7 +312,7 @@
         tick += 0.022;
 
         const curEl = this.activeSourceType === 'native' ? this.nativeAudio : this.audio;
-        const isPlaying = curEl && !curEl.paused;
+        const isPlaying = this.externalPlaying || (curEl && !curEl.paused);
 
         if (this.orbit8DEnabled && this.panner8D && this.activeSourceType === 'dsp' && isPlaying) {
           this.orbitAngle += 0.022;

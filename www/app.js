@@ -547,6 +547,40 @@
     window.Capacitor.isNativePlatform()
   );
 
+  const HAS_IOS_NATIVE_AUDIO = !!(
+    IS_CAPACITOR_NATIVE &&
+    IS_IOS &&
+    window.webkit &&
+    window.webkit.messageHandlers &&
+    window.webkit.messageHandlers.geoAudio
+  );
+
+  let nativeCurTimeSec = 0;
+  let nativeDurSec = 0;
+  let nativeIsPlaying = false;
+
+  function postIosAudio(payload) {
+    if (!HAS_IOS_NATIVE_AUDIO) return;
+    try {
+      window.webkit.messageHandlers.geoAudio.postMessage(payload);
+    } catch (_) {}
+  }
+
+  function compactQueueForNative() {
+    const src = queue.length ? queue : displayedTracks;
+    return src.slice(0, 120).map((t) => {
+      const idStr = String(t.id);
+      return {
+        id: idStr,
+        title: t.title || 'Geo Music',
+        artist: t.artist || 'Geo Music',
+        cover: offlineTracksMap[idStr]?.cover || t.cover || '',
+        transcodingUrl: t.transcodingUrl || '',
+        durationMs: t.durationMs || 0
+      };
+    });
+  }
+
   async function smartScFetch(fullUrl) {
     if (IS_CAPACITOR_NATIVE) {
       return fetch(fullUrl);
@@ -692,6 +726,25 @@
 
       await idbSaveAudioBuffer(idStr, mergedBuffer, mimeType);
 
+      if (HAS_IOS_NATIVE_AUDIO) {
+        try {
+          const blobForNative = new Blob([mergedBuffer], { type: mimeType });
+          const nativeReader = new FileReader();
+          nativeReader.onloadend = () => {
+            const b64 = (nativeReader.result || '').split(',')[1];
+            if (b64) {
+              postIosAudio({
+                cmd: 'saveOfflineFile',
+                id: idStr,
+                base64: b64,
+                ext: mimeType.includes('mpeg') ? 'mp3' : 'm4a'
+              });
+            }
+          };
+          nativeReader.readAsDataURL(blobForNative);
+        } catch (_) {}
+      }
+
       const coverDataUrl = await imageToDataUrl(track.cover);
       offlineTracksMap[idStr] = { ...track, cover: coverDataUrl };
       savedOfflineIds.add(idStr);
@@ -736,6 +789,7 @@
     delete offlineTracksMap[idStr];
     delete savingProgressMap[idStr];
     savedOfflineIds.delete(idStr);
+    postIosAudio({ cmd: 'deleteOfflineFile', id: idStr });
     if ($('offlineCountBadge')) $('offlineCountBadge').textContent = savedOfflineIds.size;
 
     try {
@@ -769,6 +823,7 @@
     } catch (_) {}
     offlineTracksMap = {};
     savedOfflineIds.clear();
+    postIosAudio({ cmd: 'clearOfflineFiles' });
     try {
       localStorage.removeItem('geo_ios_offline_tracks_v1');
     } catch (_) {}
@@ -1428,6 +1483,89 @@
     stopBothDecks();
 
     const speedVal = Number($('speedRange')?.value || 1);
+    const idStr = String(track.id);
+    const coverSrc = offlineTracksMap[idStr]?.cover || track.cover || '';
+
+    // 1) مسار التشغيل الأصلي على iOS (Swift AVPlayer — يعمل 100% في الخلفية وشاشة القفل بدون توقف)
+    if (HAS_IOS_NATIVE_AUDIO) {
+      useDeck('native');
+      nativeIsPlaying = !!autoPlay;
+      engine.setExternalPlaying(nativeIsPlaying);
+      if ($('playPauseSvg')) $('playPauseSvg').innerHTML = nativeIsPlaying ? SVG_PAUSE : SVG_PLAY;
+      if ($('miniPlayPauseSvg')) $('miniPlayPauseSvg').innerHTML = nativeIsPlaying ? SVG_PAUSE : SVG_PLAY;
+
+      let streamUrl = '';
+      if (!isTrackSavedOffline(idStr) && track.transcodingUrl) {
+        try {
+          const resolved = await scFetchJson(track.transcodingUrl);
+          if (resolved && resolved.url) streamUrl = resolved.url;
+        } catch (_) {
+          try {
+            const fresh = await fetchFullTracks([track.title]);
+            if (fresh.length && fresh[0].transcodingUrl) {
+              track.transcodingUrl = fresh[0].transcodingUrl;
+              const resolved2 = await scFetchJson(track.transcodingUrl);
+              if (resolved2 && resolved2.url) streamUrl = resolved2.url;
+            }
+          } catch (_) {}
+        }
+      }
+
+      if (isTrackSavedOffline(idStr) || track.isLocal) {
+        setStatusChipText(tStr('playingOfflineBanner'));
+        // مزامنة الـ Blob القديم مع مجلد Documents/GeoOffline على الآيفون إن وُجد في IndexedDB
+        const savedBlob = await idbGetAudio(idStr);
+        if (savedBlob) {
+          await new Promise((res) => {
+            const rd = new FileReader();
+            rd.onloadend = () => {
+              const b64 = (rd.result || '').split(',')[1];
+              if (b64) {
+                postIosAudio({
+                  cmd: 'saveOfflineFile',
+                  id: idStr,
+                  base64: b64,
+                  ext: savedBlob.type && savedBlob.type.includes('mpeg') ? 'mp3' : 'm4a'
+                });
+              }
+              res();
+            };
+            rd.onerror = () => res();
+            rd.readAsDataURL(savedBlob);
+          });
+        }
+      } else if (streamUrl) {
+        setStatusChipText(tStr('streamingBanner'));
+      }
+
+      postIosAudio({
+        cmd: 'playTrack',
+        id: idStr,
+        title: track.title || 'Geo Music',
+        artist: track.artist || 'Geo Music',
+        cover: coverSrc.startsWith('data:image/svg') ? '' : coverSrc,
+        streamUrl: streamUrl,
+        transcodingUrl: track.transcodingUrl || '',
+        clientId: scClientId,
+        durationMs: track.durationMs || 0,
+        rate: speedVal,
+        autoPlay: !!autoPlay,
+        currentIndex: currentIndex,
+        shuffle: shuffleOn,
+        repeatMode: repeatMode,
+        queue: compactQueueForNative()
+      });
+
+      if (autoPlay && !track.isLocal && !isTrackSavedOffline(idStr)) {
+        const targetTrackId = track.id;
+        setTimeout(() => {
+          if (currentTrack && currentTrack.id === targetTrackId) {
+            saveTrackOfflineInBackground(track, streamUrl || null);
+          }
+        }, 2200);
+      }
+      return;
+    }
 
     if (track.isLocal || track.directAudioUrl) {
       useDeck('dsp');
@@ -1438,7 +1576,7 @@
       return;
     }
 
-    // 1) التشغيل من الذاكرة المحلية للآيفون (IndexedDB Blob) — يعمل بكامل محرك الـ DSP والأوفلاين
+    // 1) التشغيل من الذاكرة المحلية للآيفون (IndexedDB Blob)
     const savedBlob = await idbGetAudio(track.id);
     if (savedBlob) {
       useDeck('dsp');
@@ -1468,7 +1606,6 @@
     setStatusChipText(tStr('streamingBanner'));
 
     if (IS_IOS && streamUrl.includes('.m3u8')) {
-      // على iPhone نستخدم مشغل iOS الأصلي للبث الحي حتى لا ينقطع الصوت بسبب قيود WebKit HLS+WebAudio
       useDeck('native');
       audioNative.src = streamUrl;
       audioNative.playbackRate = speedVal;
@@ -1503,7 +1640,7 @@
 
   async function loadTrack(track, autoPlay = true) {
     if (!track) return;
-    if (autoPlay) engine.init();
+    if (autoPlay && !HAS_IOS_NATIVE_AUDIO) engine.init();
 
     loopPointA = null;
     loopPointB = null;
@@ -1554,9 +1691,57 @@
     loadTrack(list[currentIndex], true);
   }
 
+  window.__geoNativeProgress = (curSec, durSec, isPlaying) => {
+    nativeCurTimeSec = Number(curSec) || 0;
+    if (durSec > 0) nativeDurSec = Number(durSec);
+    nativeIsPlaying = !!isPlaying;
+    engine.setExternalPlaying(nativeIsPlaying);
+
+    if (loopPointA !== null && loopPointB !== null && nativeCurTimeSec >= loopPointB) {
+      postIosAudio({ cmd: 'seek', positionSec: loopPointA });
+      return;
+    }
+
+    if ($('playPauseSvg')) $('playPauseSvg').innerHTML = nativeIsPlaying ? SVG_PAUSE : SVG_PLAY;
+    if ($('miniPlayPauseSvg')) $('miniPlayPauseSvg').innerHTML = nativeIsPlaying ? SVG_PAUSE : SVG_PLAY;
+    if ($('curTime')) $('curTime').textContent = fmtTime(nativeCurTimeSec);
+    const total = nativeDurSec || (currentTrack ? currentTrack.durationMs / 1000 : 0);
+    if (total > 0) {
+      const pct = (nativeCurTimeSec / total) * 100;
+      if ($('totTime')) $('totTime').textContent = fmtTime(total);
+      if ($('seekBar')) $('seekBar').value = pct;
+      if ($('miniProgressFill')) $('miniProgressFill').style.width = `${Math.min(100, pct)}%`;
+    }
+  };
+
+  window.__geoNativeTrackChanged = (trackId, idx) => {
+    const list = queue.length ? queue : displayedTracks;
+    const found = list[idx] || list.find((t) => String(t.id) === String(trackId));
+    if (!found) return;
+    currentIndex = idx >= 0 ? idx : list.indexOf(found);
+    currentTrack = found;
+    const idStr = String(found.id);
+    const coverSrc = offlineTracksMap[idStr]?.cover || found.cover || DEFAULT_COVER;
+    if ($('barTitle')) $('barTitle').textContent = found.title;
+    if ($('barArtist')) $('barArtist').textContent = found.artist;
+    if ($('barCover')) $('barCover').src = coverSrc;
+    if ($('sheetTitle')) $('sheetTitle').textContent = found.title;
+    if ($('sheetArtist')) $('sheetArtist').textContent = found.artist;
+    if ($('pureArtistImg')) $('pureArtistImg').src = coverSrc;
+    if ($('totTime')) $('totTime').textContent = found.durationFormatted || '0:00';
+    updateLikeButtonUI();
+    updateSheetSaveUI();
+    renderTracks(displayedTracks);
+  };
+
   function prevTrack() {
-    if (activeAudio.currentTime > 4) {
-      activeAudio.currentTime = 0;
+    const curSec = HAS_IOS_NATIVE_AUDIO ? nativeCurTimeSec : activeAudio.currentTime;
+    if (curSec > 4) {
+      if (HAS_IOS_NATIVE_AUDIO) {
+        postIosAudio({ cmd: 'seek', positionSec: 0 });
+      } else {
+        activeAudio.currentTime = 0;
+      }
       return;
     }
     const list = queue.length ? queue : displayedTracks;
@@ -1790,6 +1975,14 @@
       loadTrack(queue[0], true);
       return;
     }
+    if (HAS_IOS_NATIVE_AUDIO) {
+      if (nativeIsPlaying) {
+        postIosAudio({ cmd: 'pause' });
+      } else {
+        postIosAudio({ cmd: 'resume' });
+      }
+      return;
+    }
     if (activeAudio.paused) activeAudio.play().catch(() => {});
     else activeAudio.pause();
   };
@@ -1811,24 +2004,27 @@
     $('shuffleBtn').onclick = () => {
       shuffleOn = !shuffleOn;
       $('shuffleBtn').classList.toggle('active', shuffleOn);
+      postIosAudio({ cmd: 'setRepeatShuffle', shuffle: shuffleOn, repeatMode: repeatMode });
     };
   }
   if ($('repeatBtn')) {
     $('repeatBtn').onclick = () => {
       repeatMode = repeatMode === 'off' ? 'one' : 'off';
       $('repeatBtn').classList.toggle('active', repeatMode !== 'off');
+      postIosAudio({ cmd: 'setRepeatShuffle', shuffle: shuffleOn, repeatMode: repeatMode });
     };
   }
 
   if ($('abLoopBtn')) {
     $('abLoopBtn').onclick = () => {
+      const curPos = HAS_IOS_NATIVE_AUDIO ? nativeCurTimeSec : activeAudio.currentTime || 0;
       if (loopPointA === null) {
-        loopPointA = activeAudio.currentTime || 0;
+        loopPointA = curPos;
         $('abLoopBtn').classList.add('active');
         $('abLoopBtn').textContent = `A: ${fmtTime(loopPointA)} → B?`;
       } else if (loopPointB === null) {
-        if (activeAudio.currentTime > loopPointA + 1) {
-          loopPointB = activeAudio.currentTime;
+        if (curPos > loopPointA + 1) {
+          loopPointB = curPos;
           $('abLoopBtn').textContent = `${fmtTime(loopPointA)} ⇄ ${fmtTime(loopPointB)}`;
         } else {
           loopPointA = null;
@@ -1888,8 +2084,13 @@
 
   if ($('seekBar')) {
     $('seekBar').oninput = (e) => {
-      const dur = activeAudio.duration || (currentTrack ? currentTrack.durationMs / 1000 : 0);
-      if (dur) activeAudio.currentTime = (Number(e.target.value) / 100) * dur;
+      const dur = HAS_IOS_NATIVE_AUDIO
+        ? (nativeDurSec || (currentTrack ? currentTrack.durationMs / 1000 : 0))
+        : (activeAudio.duration || (currentTrack ? currentTrack.durationMs / 1000 : 0));
+      if (!dur) return;
+      const targetSec = (Number(e.target.value) / 100) * dur;
+      if (HAS_IOS_NATIVE_AUDIO) postIosAudio({ cmd: 'seek', positionSec: targetSec });
+      else activeAudio.currentTime = targetSec;
     };
   }
   if ($('bassRange')) {
@@ -1914,7 +2115,9 @@
   }
   if ($('speedRange')) {
     $('speedRange').oninput = (e) => {
-      activeAudio.playbackRate = Number(e.target.value);
+      const sp = Number(e.target.value);
+      activeAudio.playbackRate = sp;
+      postIosAudio({ cmd: 'setRate', rate: sp });
       $('speedLabel').textContent = `${e.target.value}x`;
     };
   }
@@ -2035,12 +2238,27 @@
     }
   });
 
-  function handleLocalFiles(files) {
+  async function handleLocalFiles(files) {
     for (const file of files) {
       if (!file.type.startsWith('audio/') && !/\.(mp3|m4a|wav|aac|flac|ogg)$/i.test(file.name)) continue;
+      const trackId = 'local_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
       const url = URL.createObjectURL(file);
+      if (HAS_IOS_NATIVE_AUDIO) {
+        const extMatch = file.name.match(/\.([^/.]+)$/);
+        const ext = extMatch ? extMatch[1].toLowerCase() : 'm4a';
+        await new Promise((res) => {
+          const rd = new FileReader();
+          rd.onloadend = () => {
+            const b64 = (rd.result || '').split(',')[1];
+            if (b64) postIosAudio({ cmd: 'saveOfflineFile', id: trackId, base64: b64, ext: ext });
+            res();
+          };
+          rd.onerror = () => res();
+          rd.readAsDataURL(file);
+        });
+      }
       localTracks.unshift({
-        id: 'local_' + Date.now() + '_' + Math.random(),
+        id: trackId,
         title: file.name.replace(/\.[^/.]+$/, ''),
         artist: 'iPhone Files',
         album: 'Local',
@@ -2072,6 +2290,7 @@
         sleepTimerId = setTimeout(() => {
           audioDsp.pause();
           audioNative.pause();
+          postIosAudio({ cmd: 'pause' });
         }, m * 60000);
         $('sleepBtn').classList.add('active');
       } else {
